@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+  --background: oklch(0.985 0.004 85);
+  --foreground: oklch(0.18 0.01 70);
+  --surface: oklch(1 0 0);
+  --surface-muted: oklch(0.962 0.005 85);
+  --border: oklch(0.87 0.008 85);
+  --brand: oklch(0.52 0.13 151);
+  --brand-strong: oklch(0.42 0.11 151);
+  --muted-foreground: oklch(0.48 0.015 70);
+  --danger: oklch(0.55 0.2 27);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  overflow-x: hidden;
+  background: var(--background);
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+[role="button"],
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+input,
+select,
+textarea {
+  min-height: 2.75rem;
+}
+
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+a[href] {
+  touch-action: manipulation;
+}
+
+:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--brand) 24%, white);
+}
+
+@media (max-width: 374px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+@keyframes bestManAskIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes bestManAskIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}

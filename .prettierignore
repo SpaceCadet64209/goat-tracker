@@ -1,0 +1,11 @@
+.next
+.claude
+.codex
+.cursor
+coverage
+node_modules
+openspec
+playwright-report
+test-results
+pnpm-lock.yaml
+Images

@@ -1,0 +1,29 @@
+# dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# tests
+coverage/
+playwright-report/
+test-results/
+
+# environment and local secrets
+.env
+.env.*
+!.env.example
+
+# Vercel and Supabase local state
+.vercel/
+supabase/.branches/
+supabase/.temp/
+
+# editors and operating systems
+.DS_Store
+*.swp
+
+# logs
+*.log
+pnpm-debug.log*
