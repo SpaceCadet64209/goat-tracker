@@ -11,7 +11,9 @@ export type FarmFileView = Readonly<{
 }>;
 
 /** Returns only the current member's RLS-visible file metadata and signed links. */
-export async function getFarmFilesForCurrentUser(farmId: string): Promise<FarmFileView[]> {
+export async function getFarmFilesForCurrentUser(
+  farmId: string,
+): Promise<FarmFileView[]> {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("farm_files")
@@ -25,7 +27,9 @@ export async function getFarmFilesForCurrentUser(farmId: string): Promise<FarmFi
     data.map(async (file) => {
       const signed =
         file.status === "available"
-          ? await supabase.storage.from("farm-files").createSignedUrl(file.object_path, 60)
+          ? await supabase.storage
+              .from("farm-files")
+              .createSignedUrl(file.object_path, 60)
           : { data: null };
       return {
         id: file.id,

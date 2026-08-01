@@ -14,7 +14,10 @@ export function CreateFarmForm() {
   return (
     <form action={action} className="mt-6 space-y-5">
       <div>
-        <label htmlFor="farm-name" className="text-sm font-semibold text-stone-800">
+        <label
+          htmlFor="farm-name"
+          className="text-sm font-semibold text-stone-800"
+        >
           Farm name
         </label>
         <input
@@ -27,7 +30,11 @@ export function CreateFarmForm() {
           aria-describedby={state && !state.ok ? "farm-name-error" : undefined}
         />
         {state && !state.ok ? (
-          <p id="farm-name-error" role="alert" className="mt-2 text-sm text-red-700">
+          <p
+            id="farm-name-error"
+            role="alert"
+            className="mt-2 text-sm text-red-700"
+          >
             {state.fieldErrors?.name?.[0] ?? state.message}
           </p>
         ) : null}

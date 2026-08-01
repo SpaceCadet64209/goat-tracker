@@ -21,5 +21,9 @@ async function FarmShell({
   const { farmId } = await params;
   const farm = await requireFarmAccess(farmId);
 
-  return <ApplicationShell farmId={farm.id} farmName={farm.name}>{children}</ApplicationShell>;
+  return (
+    <ApplicationShell farmId={farm.id} farmName={farm.name}>
+      {children}
+    </ApplicationShell>
+  );
 }

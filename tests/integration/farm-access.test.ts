@@ -1,6 +1,9 @@
 import { afterEach, describe, expect, it } from "vitest";
 
-import { createTestContext, type TestContext } from "@/tests/helpers/supabase-fixtures";
+import {
+  createTestContext,
+  type TestContext,
+} from "@/tests/helpers/supabase-fixtures";
 
 describe("farm access policies", () => {
   let context: TestContext | undefined;
@@ -22,23 +25,33 @@ describe("farm access policies", () => {
     await context.addMembership(farm, worker, "worker");
     await context.addMembership(farm, inactive, "worker", "inactive");
 
-    const [ownerClient, managerClient, workerClient, inactiveClient, unrelatedClient] =
-      await Promise.all(
-        [owner, manager, worker, inactive, unrelated].map((user) =>
-          context!.createSession(user),
-        ),
-      );
+    const [
+      ownerClient,
+      managerClient,
+      workerClient,
+      inactiveClient,
+      unrelatedClient,
+    ] = await Promise.all(
+      [owner, manager, worker, inactive, unrelated].map((user) =>
+        context!.createSession(user),
+      ),
+    );
 
-    await expect(ownerClient!.from("farms").select("id").eq("id", farm.id)).resolves
-      .toMatchObject({ data: [{ id: farm.id }], error: null });
-    await expect(managerClient!.from("farms").select("id").eq("id", farm.id)).resolves
-      .toMatchObject({ data: [{ id: farm.id }], error: null });
-    await expect(workerClient!.from("farms").select("id").eq("id", farm.id)).resolves
-      .toMatchObject({ data: [{ id: farm.id }], error: null });
-    await expect(inactiveClient!.from("farms").select("id").eq("id", farm.id)).resolves
-      .toMatchObject({ data: [], error: null });
-    await expect(unrelatedClient!.from("farms").select("id").eq("id", farm.id)).resolves
-      .toMatchObject({ data: [], error: null });
+    await expect(
+      ownerClient!.from("farms").select("id").eq("id", farm.id),
+    ).resolves.toMatchObject({ data: [{ id: farm.id }], error: null });
+    await expect(
+      managerClient!.from("farms").select("id").eq("id", farm.id),
+    ).resolves.toMatchObject({ data: [{ id: farm.id }], error: null });
+    await expect(
+      workerClient!.from("farms").select("id").eq("id", farm.id),
+    ).resolves.toMatchObject({ data: [{ id: farm.id }], error: null });
+    await expect(
+      inactiveClient!.from("farms").select("id").eq("id", farm.id),
+    ).resolves.toMatchObject({ data: [], error: null });
+    await expect(
+      unrelatedClient!.from("farms").select("id").eq("id", farm.id),
+    ).resolves.toMatchObject({ data: [], error: null });
 
     const attemptedPromotion = await managerClient!
       .from("farm_memberships")

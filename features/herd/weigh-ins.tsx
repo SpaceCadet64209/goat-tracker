@@ -1,6 +1,14 @@
 "use client";
 
-import { CalendarDays, ChevronDown, Plus, Scale, TrendingDown, TrendingUp, X } from "lucide-react";
+import {
+  CalendarDays,
+  ChevronDown,
+  Plus,
+  Scale,
+  TrendingDown,
+  TrendingUp,
+  X,
+} from "lucide-react";
 import { useMemo, useState } from "react";
 import { demoWeighIns } from "./demo-data";
 
@@ -8,13 +16,226 @@ export function WeighIns() {
   const [records, setRecords] = useState(demoWeighIns);
   const [period, setPeriod] = useState("Last 30 days");
   const [open, setOpen] = useState(false);
-  const average = useMemo(() => records.reduce((sum, item) => sum + item.weight, 0) / records.length, [records]);
+  const average = useMemo(
+    () => records.reduce((sum, item) => sum + item.weight, 0) / records.length,
+    [records],
+  );
   const gained = records.filter((item) => item.weight > item.previous).length;
-  function addRecord(data: FormData) { const goat = String(data.get("goat") || "Bella"); const weight = Number(data.get("weight")) || 0; const source = records.find((record) => record.goat === goat); setRecords((items) => [{ id: crypto.randomUUID(), goat, tag: source?.tag ?? "KBS-NEW", weight, previous: source?.weight ?? 0, date: "01 Aug 2026", trend: `${weight >= (source?.weight ?? 0) ? "+" : ""}${(weight - (source?.weight ?? 0)).toFixed(1)} kg` }, ...items]); setOpen(false); }
-  return <div className="grid gap-6">
-    <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-sm font-semibold text-emerald-700">Herd performance</p><h1 className="mt-1 text-3xl font-bold tracking-tight text-stone-950 sm:text-4xl">Weigh-ins</h1><p className="mt-2 text-stone-600">Track growth and spot changes early.</p></div><button onClick={() => setOpen(true)} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-5 font-semibold text-white shadow-sm hover:bg-emerald-800"><Plus className="size-5" /> Log a weigh-in</button></header>
-    <section className="grid gap-4 sm:grid-cols-3"><Metric label="Latest herd average" value={`${average.toFixed(1)} kg`} detail="Across recorded goats" icon={<Scale className="size-5" />} /><Metric label="Positive movement" value={`${gained} of ${records.length}`} detail="Goats gained since last check" icon={<TrendingUp className="size-5" />} /><Metric label="Next check-in" value="14 Aug" detail="Suggested monthly review" icon={<CalendarDays className="size-5" />} /></section>
-    <section className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm"><div className="flex flex-wrap items-center justify-between gap-3 border-b border-stone-100 p-5"><div><h2 className="font-bold text-stone-950">Recent weigh-ins</h2><p className="mt-1 text-sm text-stone-500">Demo data updates as you log a record.</p></div><label className="relative"><span className="sr-only">Date range</span><select value={period} onChange={(e) => setPeriod(e.target.value)} className="appearance-none rounded-lg border border-stone-200 bg-white py-2 pr-9 pl-3 text-sm font-semibold text-stone-700"><option>Last 30 days</option><option>Last 90 days</option><option>This year</option></select><ChevronDown className="pointer-events-none absolute top-3 right-3 size-4 text-stone-500" /></label></div><div className="hidden grid-cols-[1.4fr_1fr_1fr_1fr] gap-3 border-b border-stone-100 px-5 py-3 text-xs font-bold tracking-wide text-stone-500 uppercase sm:grid"><span>Goat</span><span>Weight</span><span>Change</span><span>Date</span></div><div className="divide-y divide-stone-100">{records.map((record) => <article key={record.id} className="grid gap-2 px-5 py-4 sm:grid-cols-[1.4fr_1fr_1fr_1fr] sm:items-center"><div><p className="font-bold text-stone-900">{record.goat}</p><p className="text-xs text-stone-500">{record.tag}</p></div><p className="text-lg font-bold text-stone-900">{record.weight} <span className="text-sm font-medium text-stone-500">kg</span></p><p className={`flex items-center gap-1 text-sm font-semibold ${record.weight >= record.previous ? "text-emerald-700" : "text-rose-700"}`}>{record.weight >= record.previous ? <TrendingUp className="size-4" /> : <TrendingDown className="size-4" />}{record.trend}</p><p className="text-sm text-stone-500">{record.date}</p></article>)}</div></section>{open && <WeighDialog onClose={() => setOpen(false)} onSubmit={addRecord} />}</div>;
+  function addRecord(data: FormData) {
+    const goat = String(data.get("goat") || "Bella");
+    const weight = Number(data.get("weight")) || 0;
+    const source = records.find((record) => record.goat === goat);
+    setRecords((items) => [
+      {
+        id: crypto.randomUUID(),
+        goat,
+        tag: source?.tag ?? "KBS-NEW",
+        weight,
+        previous: source?.weight ?? 0,
+        date: "01 Aug 2026",
+        trend: `${weight >= (source?.weight ?? 0) ? "+" : ""}${(weight - (source?.weight ?? 0)).toFixed(1)} kg`,
+      },
+      ...items,
+    ]);
+    setOpen(false);
+  }
+  return (
+    <div className="grid gap-6">
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-sm font-semibold text-emerald-700">
+            Herd performance
+          </p>
+          <h1 className="mt-1 text-3xl font-bold tracking-tight text-stone-950 sm:text-4xl">
+            Weigh-ins
+          </h1>
+          <p className="mt-2 text-stone-600">
+            Track growth and spot changes early.
+          </p>
+        </div>
+        <button
+          onClick={() => setOpen(true)}
+          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-5 font-semibold text-white shadow-sm hover:bg-emerald-800"
+        >
+          <Plus className="size-5" /> Log a weigh-in
+        </button>
+      </header>
+      <section className="grid gap-4 sm:grid-cols-3">
+        <Metric
+          label="Latest herd average"
+          value={`${average.toFixed(1)} kg`}
+          detail="Across recorded goats"
+          icon={<Scale className="size-5" />}
+        />
+        <Metric
+          label="Positive movement"
+          value={`${gained} of ${records.length}`}
+          detail="Goats gained since last check"
+          icon={<TrendingUp className="size-5" />}
+        />
+        <Metric
+          label="Next check-in"
+          value="14 Aug"
+          detail="Suggested monthly review"
+          icon={<CalendarDays className="size-5" />}
+        />
+      </section>
+      <section className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-stone-100 p-5">
+          <div>
+            <h2 className="font-bold text-stone-950">Recent weigh-ins</h2>
+            <p className="mt-1 text-sm text-stone-500">
+              Demo data updates as you log a record.
+            </p>
+          </div>
+          <label className="relative">
+            <span className="sr-only">Date range</span>
+            <select
+              value={period}
+              onChange={(e) => setPeriod(e.target.value)}
+              className="appearance-none rounded-lg border border-stone-200 bg-white py-2 pr-9 pl-3 text-sm font-semibold text-stone-700"
+            >
+              <option>Last 30 days</option>
+              <option>Last 90 days</option>
+              <option>This year</option>
+            </select>
+            <ChevronDown className="pointer-events-none absolute top-3 right-3 size-4 text-stone-500" />
+          </label>
+        </div>
+        <div className="hidden grid-cols-[1.4fr_1fr_1fr_1fr] gap-3 border-b border-stone-100 px-5 py-3 text-xs font-bold tracking-wide text-stone-500 uppercase sm:grid">
+          <span>Goat</span>
+          <span>Weight</span>
+          <span>Change</span>
+          <span>Date</span>
+        </div>
+        <div className="divide-y divide-stone-100">
+          {records.map((record) => (
+            <article
+              key={record.id}
+              className="grid gap-2 px-5 py-4 sm:grid-cols-[1.4fr_1fr_1fr_1fr] sm:items-center"
+            >
+              <div>
+                <p className="font-bold text-stone-900">{record.goat}</p>
+                <p className="text-xs text-stone-500">{record.tag}</p>
+              </div>
+              <p className="text-lg font-bold text-stone-900">
+                {record.weight}{" "}
+                <span className="text-sm font-medium text-stone-500">kg</span>
+              </p>
+              <p
+                className={`flex items-center gap-1 text-sm font-semibold ${record.weight >= record.previous ? "text-emerald-700" : "text-rose-700"}`}
+              >
+                {record.weight >= record.previous ? (
+                  <TrendingUp className="size-4" />
+                ) : (
+                  <TrendingDown className="size-4" />
+                )}
+                {record.trend}
+              </p>
+              <p className="text-sm text-stone-500">{record.date}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+      {open && (
+        <WeighDialog onClose={() => setOpen(false)} onSubmit={addRecord} />
+      )}
+    </div>
+  );
 }
-function Metric({ label, value, detail, icon }: { label: string; value: string; detail: string; icon: React.ReactNode }) { return <article className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm"><span className="grid size-10 place-items-center rounded-xl bg-emerald-50 text-emerald-700">{icon}</span><p className="mt-4 text-2xl font-bold tracking-tight text-stone-950">{value}</p><p className="mt-1 font-semibold text-stone-700">{label}</p><p className="mt-1 text-xs text-stone-500">{detail}</p></article> }
-function WeighDialog({ onClose, onSubmit }: { onClose: () => void; onSubmit: (data: FormData) => void }) { return <div className="fixed inset-0 z-50 grid place-items-end bg-stone-950/35 sm:place-items-center sm:p-5"><form action={onSubmit} className="w-full max-w-md rounded-t-2xl bg-white p-5 shadow-2xl sm:rounded-2xl sm:p-7"><div className="flex items-start justify-between"><div><h2 className="text-xl font-bold">Log a weigh-in</h2><p className="mt-1 text-sm text-stone-600">This only updates the frontend demo.</p></div><button type="button" onClick={onClose} className="grid size-10 place-items-center rounded-lg hover:bg-stone-100" aria-label="Close"><X className="size-5" /></button></div><div className="mt-6 grid gap-4"><label className="grid gap-1.5 text-sm font-semibold text-stone-700">Goat<select name="goat" className="rounded-lg border border-stone-300 bg-white px-3 py-2"><option>Bella</option><option>Milo</option><option>Nala</option><option>Daisy</option><option>Storm</option></select></label><label className="grid gap-1.5 text-sm font-semibold text-stone-700">Weight (kg)<input name="weight" type="number" step="0.1" min="0" required placeholder="e.g. 72.4" className="rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-emerald-600" /></label></div><div className="mt-7 flex justify-end gap-3"><button type="button" onClick={onClose} className="rounded-lg px-4 py-2 font-semibold text-stone-700 hover:bg-stone-100">Cancel</button><button className="rounded-lg bg-emerald-700 px-4 py-2 font-semibold text-white hover:bg-emerald-800">Save weigh-in</button></div></form></div> }
+function Metric({
+  label,
+  value,
+  detail,
+  icon,
+}: {
+  label: string;
+  value: string;
+  detail: string;
+  icon: React.ReactNode;
+}) {
+  return (
+    <article className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm">
+      <span className="grid size-10 place-items-center rounded-xl bg-emerald-50 text-emerald-700">
+        {icon}
+      </span>
+      <p className="mt-4 text-2xl font-bold tracking-tight text-stone-950">
+        {value}
+      </p>
+      <p className="mt-1 font-semibold text-stone-700">{label}</p>
+      <p className="mt-1 text-xs text-stone-500">{detail}</p>
+    </article>
+  );
+}
+function WeighDialog({
+  onClose,
+  onSubmit,
+}: {
+  onClose: () => void;
+  onSubmit: (data: FormData) => void;
+}) {
+  return (
+    <div className="fixed inset-0 z-50 grid place-items-end bg-stone-950/35 sm:place-items-center sm:p-5">
+      <form
+        action={onSubmit}
+        className="w-full max-w-md rounded-t-2xl bg-white p-5 shadow-2xl sm:rounded-2xl sm:p-7"
+      >
+        <div className="flex items-start justify-between">
+          <div>
+            <h2 className="text-xl font-bold">Log a weigh-in</h2>
+            <p className="mt-1 text-sm text-stone-600">
+              This only updates the frontend demo.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="grid size-10 place-items-center rounded-lg hover:bg-stone-100"
+            aria-label="Close"
+          >
+            <X className="size-5" />
+          </button>
+        </div>
+        <div className="mt-6 grid gap-4">
+          <label className="grid gap-1.5 text-sm font-semibold text-stone-700">
+            Goat
+            <select
+              name="goat"
+              className="rounded-lg border border-stone-300 bg-white px-3 py-2"
+            >
+              <option>Bella</option>
+              <option>Milo</option>
+              <option>Nala</option>
+              <option>Daisy</option>
+              <option>Storm</option>
+            </select>
+          </label>
+          <label className="grid gap-1.5 text-sm font-semibold text-stone-700">
+            Weight (kg)
+            <input
+              name="weight"
+              type="number"
+              step="0.1"
+              min="0"
+              required
+              placeholder="e.g. 72.4"
+              className="rounded-lg border border-stone-300 px-3 py-2 outline-none focus:border-emerald-600"
+            />
+          </label>
+        </div>
+        <div className="mt-7 flex justify-end gap-3">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-lg px-4 py-2 font-semibold text-stone-700 hover:bg-stone-100"
+          >
+            Cancel
+          </button>
+          <button className="rounded-lg bg-emerald-700 px-4 py-2 font-semibold text-white hover:bg-emerald-800">
+            Save weigh-in
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}

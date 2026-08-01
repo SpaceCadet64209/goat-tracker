@@ -83,14 +83,14 @@ export function ExploreWithBestManAsk() {
             >
               <div
                 aria-hidden
-                className="pointer-events-none absolute -right-16 -top-20 size-56 rounded-full bg-emerald-200/50 blur-3xl"
+                className="pointer-events-none absolute -top-20 -right-16 size-56 rounded-full bg-emerald-200/50 blur-3xl"
               />
               <div
                 aria-hidden
                 className="pointer-events-none absolute -bottom-24 -left-10 size-48 rounded-full bg-rose-200/40 blur-3xl"
               />
 
-              <div className="relative px-6 pb-6 pt-7 sm:px-8 sm:pb-8 sm:pt-8">
+              <div className="relative px-6 pt-7 pb-6 sm:px-8 sm:pt-8 sm:pb-8">
                 {phase === "ask" ? (
                   <>
                     <div className="flex items-center gap-2 text-xs font-bold tracking-[0.14em] text-emerald-800 uppercase">
@@ -106,8 +106,9 @@ export function ExploreWithBestManAsk() {
                       Will you be my best man?
                     </h2>
                     <p className="mt-4 text-base leading-7 text-stone-600">
-                      I built this for you — but before you dig into the herd, I need to ask the
-                      important question. Stand with me on the big day?
+                      I built this for you — but before you dig into the herd, I
+                      need to ask the important question. Stand with me on the
+                      big day?
                     </p>
                     <div className="mt-7 flex flex-col gap-2.5 sm:flex-row">
                       <button
@@ -145,7 +146,8 @@ export function ExploreWithBestManAsk() {
                       That means everything.
                     </h2>
                     <p className="mt-3 text-base leading-7 text-stone-600">
-                      Thank you. Now go meet the herd — I&apos;ll see you at the front.
+                      Thank you. Now go meet the herd — I&apos;ll see you at the
+                      front.
                     </p>
                   </div>
                 )}

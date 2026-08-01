@@ -9,14 +9,20 @@ export async function getActiveFarmsForCurrentUser(): Promise<FarmChoice[]> {
   const supabase = (await createSupabaseServerClient()) as unknown as {
     from: (table: "farm_memberships") => {
       select: (columns: string) => {
-        eq: (column: string, value: string) => {
+        eq: (
+          column: string,
+          value: string,
+        ) => {
           order: (
             column: string,
             options: { referencedTable: string; ascending: boolean },
           ) => Promise<{
             data: Array<{
               role: string;
-              farms: { id: string; name: string } | Array<{ id: string; name: string }> | null;
+              farms:
+                | { id: string; name: string }
+                | Array<{ id: string; name: string }>
+                | null;
             }> | null;
             error: unknown | null;
           }>;

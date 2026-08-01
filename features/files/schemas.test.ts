@@ -9,6 +9,8 @@ describe("farm file validation helpers", () => {
   });
 
   it("does not retain a supplied path as display metadata", () => {
-    expect(sanitizeFarmFileDisplayName("../../private\\notes.pdf")).toBe(".. .. private notes.pdf");
+    expect(sanitizeFarmFileDisplayName("../../private\\notes.pdf")).toBe(
+      ".. .. private notes.pdf",
+    );
   });
 });

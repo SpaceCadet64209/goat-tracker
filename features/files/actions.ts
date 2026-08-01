@@ -22,14 +22,28 @@ type FarmFile = {
   id: string;
   farm_id: string;
   object_path: string;
-  status: "pending_upload" | "available" | "upload_failed" | "delete_pending" | "deleted";
+  status:
+    | "pending_upload"
+    | "available"
+    | "upload_failed"
+    | "delete_pending"
+    | "deleted";
 };
 
-function hasExpectedFileSignature(bytes: Uint8Array, mimeType: string): boolean {
-  if (mimeType === "image/jpeg") return bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+function hasExpectedFileSignature(
+  bytes: Uint8Array,
+  mimeType: string,
+): boolean {
+  if (mimeType === "image/jpeg")
+    return bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
   if (mimeType === "image/png")
-    return bytes.slice(0, 8).every((value, index) => value === [137, 80, 78, 71, 13, 10, 26, 10][index]);
-  if (mimeType === "application/pdf") return String.fromCharCode(...bytes.slice(0, 5)) === "%PDF-";
+    return bytes
+      .slice(0, 8)
+      .every(
+        (value, index) => value === [137, 80, 78, 71, 13, 10, 26, 10][index],
+      );
+  if (mimeType === "application/pdf")
+    return String.fromCharCode(...bytes.slice(0, 5)) === "%PDF-";
   return false;
 }
 
@@ -48,19 +62,24 @@ export async function uploadFarmFileAction(
       logicalArea: formData.get("logicalArea"),
     });
     const file = formData.get("file");
-    if (!(file instanceof File) || file.size === 0) throw new Error("Choose a file to upload.");
-    if (file.size > maximumFileSize) throw new Error("Files must be 10 MB or smaller.");
+    if (!(file instanceof File) || file.size === 0)
+      throw new Error("Choose a file to upload.");
+    if (file.size > maximumFileSize)
+      throw new Error("Files must be 10 MB or smaller.");
     const extension = getFarmFileExtension(file.type);
-    if (!extension) throw new Error("Only JPEG, PNG, and PDF files are supported.");
+    if (!extension)
+      throw new Error("Only JPEG, PNG, and PDF files are supported.");
     const bytes = new Uint8Array(await file.arrayBuffer());
-    if (!hasExpectedFileSignature(bytes, file.type)) throw new Error("The file content does not match its type.");
+    if (!hasExpectedFileSignature(bytes, file.type))
+      throw new Error("The file content does not match its type.");
 
     await requireFarmRole(input.farmId, ["owner", "manager", "worker"]);
     const objectId = crypto.randomUUID();
     const objectPath = `${input.farmId}/${input.logicalArea}/${objectId}.${extension}`;
     const supabase = await createSupabaseServerClient();
     const { data: userData, error: userError } = await supabase.auth.getUser();
-    if (userError || !userData.user) throw userError ?? new Error("Authentication is required.");
+    if (userError || !userData.user)
+      throw userError ?? new Error("Authentication is required.");
     const { data, error } = await supabase
       .from("farm_files")
       .insert({
@@ -75,15 +94,21 @@ export async function uploadFarmFileAction(
       })
       .select("id, farm_id, object_path, status")
       .single();
-    if (error || !data) throw error ?? new Error("File metadata could not be created.");
+    if (error || !data)
+      throw error ?? new Error("File metadata could not be created.");
     pendingFile = data as FarmFile;
 
-    const upload = await supabase.storage.from("farm-files").upload(objectPath, bytes, {
-      contentType: file.type,
-      upsert: false,
-    });
+    const upload = await supabase.storage
+      .from("farm-files")
+      .upload(objectPath, bytes, {
+        contentType: file.type,
+        upsert: false,
+      });
     if (upload.error) {
-      await supabase.from("farm_files").update({ status: "upload_failed" }).eq("id", pendingFile.id);
+      await supabase
+        .from("farm_files")
+        .update({ status: "upload_failed" })
+        .eq("id", pendingFile.id);
       throw upload.error;
     }
     const completion = await supabase
@@ -114,7 +139,9 @@ export async function deleteFarmFileAction(
       .single();
     if (error || !data) throw error ?? new Error("File was not found.");
     const pending = data as FarmFile;
-    const removal = await supabase.storage.from("farm-files").remove([pending.object_path]);
+    const removal = await supabase.storage
+      .from("farm-files")
+      .remove([pending.object_path]);
     if (removal.error) throw removal.error;
     const completion = await supabase
       .from("farm_files")
@@ -143,9 +170,12 @@ export async function reconcileFarmFileDeletionAction(
       .eq("farm_id", farmId)
       .eq("status", "delete_pending")
       .single();
-    if (error || !data) throw error ?? new Error("No pending deletion was found.");
+    if (error || !data)
+      throw error ?? new Error("No pending deletion was found.");
     const pending = data as FarmFile;
-    const removal = await supabase.storage.from("farm-files").remove([pending.object_path]);
+    const removal = await supabase.storage
+      .from("farm-files")
+      .remove([pending.object_path]);
     if (removal.error) throw removal.error;
     const completion = await supabase
       .from("farm_files")

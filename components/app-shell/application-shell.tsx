@@ -33,14 +33,20 @@ const primaryItems = [
   { label: "Programs", segment: "programs", icon: ClipboardPlus },
 ];
 
-export function ApplicationShell({ children, farmId, farmName }: ApplicationShellProps) {
+export function ApplicationShell({
+  children,
+  farmId,
+  farmName,
+}: ApplicationShellProps) {
   const pathname = usePathname();
   const farmHref = farmId ? `/farms/${farmId}` : "/farms";
   const farmLabel = farmId ? "Current farm" : "Choose a farm";
 
   const isActive = (segment: string) => {
     const href = segment ? `${farmHref}/${segment}` : farmHref;
-    return segment ? pathname.startsWith(`${href}/`) || pathname === href : pathname === href;
+    return segment
+      ? pathname.startsWith(`${href}/`) || pathname === href
+      : pathname === href;
   };
 
   return (
@@ -75,7 +81,10 @@ export function ApplicationShell({ children, farmId, farmName }: ApplicationShel
                     : "text-stone-600 hover:bg-stone-100 hover:text-stone-950",
                 )}
               >
-                <Icon aria-hidden="true" className={cn("size-5", active && "text-emerald-700")} />
+                <Icon
+                  aria-hidden="true"
+                  className={cn("size-5", active && "text-emerald-700")}
+                />
                 {label}
               </Link>
             );
@@ -155,7 +164,9 @@ export function ApplicationShell({ children, farmId, farmName }: ApplicationShel
             className="border-t border-stone-100 bg-stone-50 px-4 py-2 text-sm text-stone-600 sm:px-6 lg:px-8"
           >
             <span className="font-semibold text-stone-800">Farm context:</span>{" "}
-            {farmId ? farmName ?? "A farm is selected for this page." : "Select a farm to continue."}
+            {farmId
+              ? (farmName ?? "A farm is selected for this page.")
+              : "Select a farm to continue."}
           </div>
         </header>
         <main
@@ -179,10 +190,17 @@ export function ApplicationShell({ children, farmId, farmName }: ApplicationShel
               aria-current={active ? "page" : undefined}
               className={cn(
                 "relative flex min-h-[4.75rem] min-w-0 flex-1 flex-col items-center justify-center gap-1 px-1 text-center text-[11px] font-semibold transition-colors sm:px-2 sm:text-xs",
-                active ? "bg-emerald-50 text-emerald-800" : "text-stone-500 hover:bg-stone-50 hover:text-emerald-800",
+                active
+                  ? "bg-emerald-50 text-emerald-800"
+                  : "text-stone-500 hover:bg-stone-50 hover:text-emerald-800",
               )}
             >
-              {active ? <span aria-hidden="true" className="absolute inset-x-4 top-0 h-0.5 rounded-full bg-emerald-700" /> : null}
+              {active ? (
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-x-4 top-0 h-0.5 rounded-full bg-emerald-700"
+                />
+              ) : null}
               <Icon aria-hidden="true" className="size-5" />
               <span className="truncate">{label}</span>
             </Link>
