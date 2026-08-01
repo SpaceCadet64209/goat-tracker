@@ -11,13 +11,8 @@ export function ExploreWithBestManAsk() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [phase, setPhase] = useState<Phase>("ask");
-  const [mounted, setMounted] = useState(false);
   const titleId = useId();
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -64,7 +59,7 @@ export function ExploreWithBestManAsk() {
   }
 
   const dialog =
-    open && mounted
+    open
       ? createPortal(
           <div
             className="fixed inset-0 z-[100] flex items-end justify-center bg-stone-950/55 p-4 backdrop-blur-[2px] sm:items-center"
